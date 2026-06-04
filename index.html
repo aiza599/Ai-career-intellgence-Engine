@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Career Intelligence Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  /* ===== RESET & BASE ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0a0c10;
+    --bg2:      #111318;
+    --bg3:      #1a1d24;
+    --border:   rgba(255,255,255,0.07);
+    --border2:  rgba(255,255,255,0.13);
+    --accent:   #7DF9C2;
+    --accent2:  #5EC4FF;
+    --accent3:  #FF6B6B;
+    --text:     #eeedf0;
+    --muted:    #7c7d86;
+    --card-bg:  rgba(255,255,255,0.03);
+    --glow:     rgba(125,249,194,0.12);
+    --radius:   16px;
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== BACKGROUND GRID ===== */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(125,249,194,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(125,249,194,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ===== HEADER ===== */
+  header {
+    padding: 48px 0 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .logo-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(125,249,194,0.08);
+    border: 1px solid rgba(125,249,194,0.2);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-family: var(--font-head);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .logo-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+
+  h1 {
+    font-family: var(--font-head);
+    font-size: clamp(32px, 6vw, 62px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    animation: fadeDown 0.6s 0.1s ease both;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 520px;
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+
+  /* ===== SEARCH BOX ===== */
+  .search-wrap {
+    width: 100%;
+    max-width: 680px;
+    margin: 8px auto 0;
+    animation: fadeDown 0.6s 0.3s ease both;
+  }
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    background: var(--bg2);
+    border: 1.5px solid var(--border2);
+    border-radius: 14px;
+    padding: 6px 6px 6px 20px;
+    gap: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .search-box:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(125,249,194,0.08);
+  }
+
+  .search-icon { color: var(--muted); font-size: 20px; flex-shrink: 0; }
+
+  #search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  #search-input::placeholder { color: var(--muted); }
+
+  #search-btn {
+    background: var(--accent);
+    color: #0a0c10;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-family: var(--font-head);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.15s, opacity 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  #search-btn:hover { opacity: 0.88; transform: scale(0.98); }
+  #search-btn:active { transform: scale(0.95); }
+
+  /* ===== CHIP SUGGESTIONS ===== */
+  .chips {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    margin-top: 14px;
+    animation: fadeDown 0.6s 0.4s ease both;
+  }
+
+  .chip {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 999px;
+    padding: 5px 14px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .chip:hover { border-color: var(--accent); color: var(--accent); background: var(--glow); }
+
+  /* ===== MATCH ALERT (fuzzy suggestions) ===== */
+  #match-alert {
+    display: none;
+    background: rgba(255,107,107,0.08);
+    border: 1px solid rgba(255,107,107,0.2);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #FF9E9E;
+    margin-top: 10px;
+    text-align: center;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #match-alert span { color: var(--accent); cursor: pointer; text-decoration: underline; }
+
+  /* ===== RESULT SECTION ===== */
+  #result-section {
+    margin-top: 48px;
+    display: none;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  /* ===== CAREER HERO CARD ===== */
+  .career-hero {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 36px 40px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: start;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .career-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: var(--hero-color, rgba(125,249,194,0.07));
+    filter: blur(40px);
+    pointer-events: none;
+  }
+
+  .hero-emoji {
+    font-size: 52px;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .hero-career-name {
+    font-family: var(--font-head);
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+
+  .hero-tagline {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 500px;
+  }
+
+  .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 500;
+    padding: 4px 12px; border-radius: 999px;
+    letter-spacing: 0.02em;
+  }
+
+  .badge-green { background: rgba(125,249,194,0.12); color: var(--accent); border: 1px solid rgba(125,249,194,0.2); }
+  .badge-blue  { background: rgba(94,196,255,0.12);  color: var(--accent2); border: 1px solid rgba(94,196,255,0.2); }
+  .badge-red   { background: rgba(255,107,107,0.12); color: var(--accent3); border: 1px solid rgba(255,107,107,0.2); }
+  .badge-amber { background: rgba(255,196,0,0.10);   color: #ffc400;       border: 1px solid rgba(255,196,0,0.2); }
+
+  /* ===== CONFIDENCE RING ===== */
+  .confidence-ring-wrap {
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .ring-label { font-size: 11px; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--font-head); }
+  .ring-value { font-family: var(--font-head); font-size: 22px; font-weight: 800; color: var(--accent); margin-top: 6px; }
+
+  svg.ring circle { transition: stroke-dashoffset 1s cubic-bezier(.4,0,.2,1); }
+
+  /* ===== STATS ROW ===== */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .stat-card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+  }
+
+  .stat-label { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; font-family: var(--font-head); font-weight: 600; margin-bottom: 6px; }
+  .stat-value { font-family: var(--font-head); font-size: 28px; font-weight: 800; color: var(--text); }
+  .stat-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* ===== ROADMAP ===== */
+  .section-heading {
+    font-family: var(--font-head);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 32px 0 14px;
+  }
+
+  .roadmap { display: flex; flex-direction: column; gap: 0; }
+
+  .roadmap-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 0;
+    position: relative;
+    transition: background 0.15s;
+  }
+
+  .roadmap-step:first-child { border-radius: 14px 14px 0 0; }
+  .roadmap-step:last-child  { border-radius: 0 0 14px 14px; }
+  .roadmap-step:not(:last-child) { border-bottom: none; }
+  .roadmap-step:hover { background: var(--bg3); }
+
+  .step-num {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(125,249,194,0.1);
+    border: 1px solid rgba(125,249,194,0.25);
+    color: var(--accent);
+    font-family: var(--font-head);
+    font-size: 13px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-body { flex: 1; }
+  .step-title { font-weight: 500; font-size: 15px; color: var(--text); }
+  .step-desc  { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+  .step-tag {
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 999px;
+    letter-spacing: 0.04em; flex-shrink: 0; align-self: center;
+  }
+
+  .tag-foundation { background: rgba(94,196,255,0.1);  color: var(--accent2); }
+  .tag-core       { background: rgba(125,249,194,0.1); color: var(--accent); }
+  .tag-advanced   { background: rgba(255,107,107,0.1); color: var(--accent3); }
+  .tag-portfolio  { background: rgba(255,196,0,0.1);   color: #ffc400; }
+
+  /* ===== SKILLS & SALARY ===== */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 4px; }
+  @media(max-width:580px){ .two-col { grid-template-columns: 1fr; } .career-hero { grid-template-columns: 1fr; } }
+
+  .info-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+  }
+
+  .info-card h3 { font-family: var(--font-head); font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--text); }
+
+  .skill-list { display: flex; flex-wrap: wrap; gap: 7px; }
+
+  .skill-chip {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    padding: 5px 12px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .salary-bar-wrap { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+
+  .salary-row { display: flex; flex-direction: column; gap: 4px; }
+  .salary-row-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+  .salary-row-label strong { color: var(--text); font-weight: 500; }
+
+  .salary-bar-bg { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+  .salary-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 1s cubic-bezier(.4,0,.2,1); width: 0; }
+
+  /* ===== FUTURE SCOPE ===== */
+  .scope-card {
+    background: linear-gradient(135deg, rgba(125,249,194,0.06) 0%, rgba(94,196,255,0.04) 100%);
+    border: 1px solid rgba(125,249,194,0.15);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-top: 4px;
+  }
+
+  .scope-card h3 { font-family: var(--font-head); font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+  .scope-text { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* ===== RELATED CAREERS ===== */
+  .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+
+  .related-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .related-card:hover {
+    border-color: var(--accent);
+    background: rgba(125,249,194,0.04);
+    transform: translateY(-2px);
+  }
+
+  .related-emoji { font-size: 24px; margin-bottom: 6px; }
+  .related-name { font-family: var(--font-head); font-size: 14px; font-weight: 700; }
+  .related-field { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* ===== HISTORY ===== */
+  #history-section { display: none; margin-top: 48px; }
+
+  .history-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .history-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 999px;
+    padding: 6px 14px; font-size: 13px; color: var(--muted); cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .history-chip:hover { border-color: var(--accent); color: var(--accent); }
+  .history-chip .h-emoji { font-size: 15px; }
+
+  /* ===== LOADING DOTS ===== */
+  .loading { display: none; text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
+  .dot-loader span { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin: 0 3px; animation: bounce 1.2s infinite; }
+  .dot-loader span:nth-child(2) { animation-delay: 0.2s; }
+  .dot-loader span:nth-child(3) { animation-delay: 0.4s; }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeDown  { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: none; } }
+  @keyframes fadeUp    { from { opacity: 0; transform: translateY(20px);  } to { opacity: 1; transform: none; } }
+  @keyframes pulse     { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(0.85)} }
+  @keyframes bounce    { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-10px)} }
+  @keyframes slideIn   { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+
+  .stagger > * { animation: slideIn 0.4s ease both; }
+  .stagger > *:nth-child(1) { animation-delay: 0.05s; }
+  .stagger > *:nth-child(2) { animation-delay: 0.1s; }
+  .stagger > *:nth-child(3) { animation-delay: 0.15s; }
+  .stagger > *:nth-child(4) { animation-delay: 0.2s; }
+  .stagger > *:nth-child(5) { animation-delay: 0.25s; }
+
+  /* ===== FOOTER ===== */
+  footer { text-align: center; padding: 32px 0 0; color: var(--muted); font-size: 13px; border-top: 1px solid var(--border); margin-top: 60px; }
+  footer strong { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-badge"><div class="logo-dot"></div> AI Career Intelligence Engine v2.0</div>
+    <h1>Find Your <span>Dream Career</span><br>With AI Guidance</h1>
+    <p class="subtitle">Type any skill, interest, or field — our smart engine analyzes 25+ career paths and gives you a complete roadmap.</p>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" type="text" placeholder="e.g. programming, doctor, design, law..." autocomplete="off" />
+        <button id="search-btn" onclick="doSearch()">Analyze →</button>
+      </div>
+    </div>
+
+    <div id="match-alert"></div>
+
+    <div class="chips" id="chip-area">
+      <div class="chip" onclick="quickSearch('AI Engineer')">🤖 AI Engineer</div>
+      <div class="chip" onclick="quickSearch('Doctor')">🏥 Doctor</div>
+      <div class="chip" onclick="quickSearch('Software Engineer')">💻 Software Engineer</div>
+      <div class="chip" onclick="quickSearch('Data Scientist')">📊 Data Scientist</div>
+      <div class="chip" onclick="quickSearch('Cyber Security')">🔐 Cyber Security</div>
+      <div class="chip" onclick="quickSearch('Graphic Designer')">🎨 Graphic Designer</div>
+      <div class="chip" onclick="quickSearch('Lawyer')">⚖️ Lawyer</div>
+      <div class="chip" onclick="quickSearch('Business Analyst')">📈 Business</div>
+    </div>
+  </header>
+
+  <!-- LOADING -->
+  <div class="loading" id="loading">
+    <div class="dot-loader"><span></span><span></span><span></span></div>
+    <p style="margin-top:12px;">Analyzing career path...</p>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-section"></div>
+
+  <!-- HISTORY -->
+  <div id="history-section">
+    <div class="section-heading">Recent Searches</div>
+    <div class="history-chips" id="history-chips"></div>
+  </div>
+
+  <footer>
+    Built with <strong>Python logic + AI matching</strong> — Universal Career Intelligence Engine &copy; 2025
+  </footer>
+</div>
+
+<script>
+// ============================================================
+// CAREER DATABASE — 25 Careers
+// ============================================================
+const CAREERS = [
+  {
+    id: "ai_engineer",
+    emoji: "🤖",
+    name: "AI / ML Engineer",
+    field: "Technology",
+    color: "rgba(125,249,194,0.10)",
+    tagline: "Build intelligent systems that learn, adapt, and make decisions autonomously.",
+    keywords: ["ai","artificial intelligence","machine learning","ml","deep learning","neural","nlp","chatbot","llm","generative"],
+    confidence: 96,
+    trend: "🔥 Explosive Growth",
+    trendType: "green",
+    reliabilityYears: 20,
+    demandScore: 98,
+    salaryPKR: { entry: "1.5L–2.5L/mo", mid: "3L–6L/mo", senior: "8L–15L+/mo" },
+    salaryBars: [30, 60, 90],
+    skills: ["Python","TensorFlow","PyTorch","Scikit-learn","OpenCV","LangChain","SQL","Git","Docker","Mathematics"],
+    roadmap: [
+      { title: "Master Python Programming", desc: "Variables, functions, OOP, libraries — the language of AI", tag: "foundation" },
+      { title: "Mathematics for ML", desc: "Linear Algebra, Probability, Statistics, Calculus", tag: "foundation" },
+      { title: "Machine Learning Fundamentals", desc: "Regression, Classification, Clustering — using Scikit-learn", tag: "core" },
+      { title: "Deep Learning & Neural Networks", desc: "CNN, RNN, Transformers using TensorFlow/PyTorch", tag: "core" },
+      { title: "NLP & Generative AI", desc: "LLMs, RAG, fine-tuning, prompt engineering", tag: "advanced" },
+      { title: "Deploy & Build Projects", desc: "Deploy 3–5 real AI apps, contribute to open source", tag: "portfolio" },
+    ],
+    scope: "AI is the fastest-growing field in human history. Every industry — healthcare, finance, education, law — is integrating AI. Pakistan's IT exports are booming, and AI engineers are the highest-paid professionals in tech globally. Remote work opportunities are enormous.",
+    related: ["data_scientist","mlops","software_engineer","cybersecurity"],
+  },
+  {
+    id: "software_engineer",
+    emoji: "💻",
+    name: "Software Engineer",
+    field: "Technology",
+    color: "rgba(94,196,255,0.10)",
+    tagline: "Design, build, and maintain the software applications that power the world.",
+    keywords: ["software","programming","developer","coding","code","app development","web","backend","frontend","full stack","javascript","python","java","react","node"],
+    confidence: 94,
+    trend: "📈 Rapidly Growing",
+    trendType: "blue",
+    reliabilityYears: 25,
+    demandScore: 95,
+    salaryPKR: { entry: "80K–1.5L/mo", mid: "2L–5L/mo", senior: "6L–12L+/mo" },
+    salaryBars: [25, 55, 82],
+    skills: ["JavaScript","Python","React","Node.js","SQL","Git","AWS","Docker","TypeScript","REST APIs"],
+    roadmap: [
+      { title: "Programming Basics", desc: "Learn Python or JavaScript — variables, loops, functions, OOP", tag: "foundation" },
+      { title: "Data Structures & Algorithms", desc: "Arrays, Trees, Graphs, Sorting — essential for interviews", tag: "foundation" },
+      { title: "Web Development", desc: "HTML/CSS, React (frontend), Node.js/Django (backend)", tag: "core" },
+      { title: "Databases & APIs", desc: "SQL, MongoDB, REST APIs, Authentication", tag: "core" },
+      { title: "DevOps Basics", desc: "Git, Docker, CI/CD, Cloud (AWS/GCP)", tag: "advanced" },
+      { title: "Build & Deploy 5 Projects", desc: "Portfolio website, e-commerce app, REST API, mobile app", tag: "portfolio" },
+    ],
+    scope: "Software engineering remains the backbone of the digital economy. Pakistan's freelancing market is massive — platforms like Upwork and Toptal pay in USD. Local companies like Systems Ltd, NetSol, and countless startups are hiring aggressively.",
+    related: ["ai_engineer","cybersecurity","data_scientist","ui_ux"],
+  },
+  {
+    id: "doctor",
+    emoji: "🏥",
+    name: "Doctor (MBBS)",
+    field: "Healthcare",
+    color: "rgba(255,107,107,0.08)",
+    tagline: "Diagnose, treat, and prevent illness — one of humanity's most noble and respected professions.",
+    keywords: ["doctor","medical","mbbs","medicine","health","physician","surgeon","hospital","patient","clinical","anatomy","pharmacology"],
+    confidence: 98,
+    trend: "🟢 Evergreen Stable",
+    trendType: "amber",
+    reliabilityYears: 50,
+    demandScore: 97,
+    salaryPKR: { entry: "80K–1.5L/mo", mid: "2L–5L/mo", senior: "5L–20L+/mo" },
+    salaryBars: [22, 52, 88],
+    skills: ["Anatomy","Physiology","Pharmacology","Clinical Skills","Diagnosis","Surgery Basics","Patient Care","Medical Ethics","Research","Communication"],
+    roadmap: [
+      { title: "FSc Pre-Medical (Matric+2)", desc: "Biology, Chemistry, Physics — secure 85%+ marks", tag: "foundation" },
+      { title: "MDCAT Entry Test", desc: "National Medical & Dental College Admission Test — practice 6+ months", tag: "foundation" },
+      { title: "MBBS Degree (5 Years)", desc: "Medical college: Anatomy, Pharmacology, Surgery, Medicine", tag: "core" },
+      { title: "House Job (1 Year)", desc: "Supervised clinical training in major hospital departments", tag: "core" },
+      { title: "FCPS / MD Specialization", desc: "Choose a specialty: Cardiology, Surgery, Psychiatry, etc.", tag: "advanced" },
+      { title: "Fellowship / Research", desc: "International fellowships, publish research papers", tag: "portfolio" },
+    ],
+    scope: "Doctors are always in demand — AI cannot replace human medical judgment. Pakistan has a severe doctor shortage (1 doctor per 1,000 patients). Abroad opportunities (UK, USA, Gulf) are outstanding. Salary grows exponentially with specialization.",
+    related: ["pharmacist","biomedical","nutritionist","psychologist"],
+  },
+  {
+    id: "data_scientist",
+    emoji: "📊",
+    name: "Data Scientist",
+    field: "Technology",
+    color: "rgba(125,249,194,0.08)",
+    tagline: "Extract insights from massive datasets to drive business decisions and strategy.",
+    keywords: ["data science","data analyst","data","analytics","statistics","visualization","pandas","numpy","tableau","power bi","excel","database","sql","big data"],
+    confidence: 93,
+    trend: "🔥 High Growth",
+    trendType: "green",
+    reliabilityYears: 18,
+    demandScore: 92,
+    salaryPKR: { entry: "1L–2L/mo", mid: "2.5L–5L/mo", senior: "6L–12L+/mo" },
+    salaryBars: [28, 58, 85],
+    skills: ["Python","R","SQL","Pandas","NumPy","Tableau","Power BI","Statistics","Machine Learning","Spark"],
+    roadmap: [
+      { title: "Statistics & Mathematics", desc: "Probability, distributions, hypothesis testing, regression", tag: "foundation" },
+      { title: "Python for Data Science", desc: "Pandas, NumPy, Matplotlib, Seaborn", tag: "foundation" },
+      { title: "SQL & Databases", desc: "Querying, joins, aggregations, PostgreSQL, BigQuery", tag: "core" },
+      { title: "Machine Learning", desc: "Scikit-learn, feature engineering, model evaluation", tag: "core" },
+      { title: "Data Visualization & BI Tools", desc: "Tableau, Power BI, Plotly dashboards", tag: "advanced" },
+      { title: "Capstone Projects", desc: "Kaggle competitions, end-to-end analysis portfolio", tag: "portfolio" },
+    ],
+    scope: "Data is the new oil. Every organization — banks, hospitals, governments, startups — needs data scientists to make sense of their data. One of the most versatile tech roles globally.",
+    related: ["ai_engineer","mlops","business_analyst","software_engineer"],
+  },
+  {
+    id: "cybersecurity",
+    emoji: "🔐",
+    name: "Cyber Security Expert",
+    field: "Technology",
+    color: "rgba(255,107,107,0.08)",
+    tagline: "Protect systems, networks, and data from the ever-growing threat of cyber attacks.",
+    keywords: ["cyber security","cybersecurity","hacking","ethical hacking","security","network security","penetration testing","ceh","cissp","firewall","malware","forensics","kali"],
+    confidence: 95,
+    trend: "🔥 Critical Demand",
+    trendType: "green",
+    reliabilityYears: 25,
+    demandScore: 96,
+    salaryPKR: { entry: "1L–2L/mo", mid: "3L–6L/mo", senior: "7L–15L+/mo" },
+    salaryBars: [28, 62, 88],
+    skills: ["Linux","Networking","Kali Linux","Python","Wireshark","Metasploit","SIEM","OWASP","Cryptography","Cloud Security"],
+    roadmap: [
+      { title: "Networking Fundamentals", desc: "TCP/IP, OSI model, DNS, HTTP, firewalls, routing", tag: "foundation" },
+      { title: "Linux & Command Line", desc: "Kali Linux, Bash scripting, system administration", tag: "foundation" },
+      { title: "Ethical Hacking", desc: "Reconnaissance, exploitation, post-exploitation techniques", tag: "core" },
+      { title: "Security Tools & SIEM", desc: "Wireshark, Metasploit, Burp Suite, Splunk", tag: "core" },
+      { title: "Certifications", desc: "CompTIA Security+, CEH, OSCP — industry gold standards", tag: "advanced" },
+      { title: "Bug Bounty & CTF", desc: "HackerOne, Bugcrowd, TryHackMe, Capture The Flag competitions", tag: "portfolio" },
+    ],
+    scope: "Cyber attacks cost the world $8 trillion in 2023. Every company now needs security professionals. Pakistan Cyber Security jobs are growing 35% annually. Remote freelancing via bug bounty can earn USD income from home.",
+    related: ["software_engineer","networking","ai_engineer","cloud_engineer"],
+  },
+  {
+    id: "graphic_designer",
+    emoji: "🎨",
+    name: "Graphic Designer",
+    field: "Creative",
+    color: "rgba(255,196,0,0.08)",
+    tagline: "Create visual communications that captivate audiences and build powerful brands.",
+    keywords: ["graphic design","design","photoshop","illustrator","ui","ux","visual","branding","logo","figma","creative","art","animation","motion graphics"],
+    confidence: 88,
+    trend: "📈 Growing",
+    trendType: "blue",
+    reliabilityYears: 20,
+    demandScore: 85,
+    salaryPKR: { entry: "60K–1L/mo", mid: "1.5L–3L/mo", senior: "4L–8L+/mo" },
+    salaryBars: [18, 42, 72],
+    skills: ["Adobe Photoshop","Illustrator","Figma","InDesign","Premiere Pro","After Effects","Typography","Color Theory","Branding","UX Principles"],
+    roadmap: [
+      { title: "Design Fundamentals", desc: "Color theory, typography, composition, visual hierarchy", tag: "foundation" },
+      { title: "Adobe Suite Mastery", desc: "Photoshop, Illustrator, InDesign — the industry standard", tag: "foundation" },
+      { title: "UI/UX Design", desc: "Figma, prototyping, wireframing, user research", tag: "core" },
+      { title: "Motion Graphics", desc: "After Effects, Premiere Pro — for animated content", tag: "core" },
+      { title: "Brand Identity Design", desc: "Logo design, style guides, complete brand packages", tag: "advanced" },
+      { title: "Portfolio & Freelancing", desc: "Behance, Dribbble, Fiverr, Upwork — get clients globally", tag: "portfolio" },
+    ],
+    scope: "Visual content consumption is at an all-time high. Social media, digital marketing, apps — everything needs design. Freelancing on Fiverr/Upwork from Pakistan in USD is highly viable. AI tools (Midjourney, Firefly) are a complement, not a replacement.",
+    related: ["ui_ux","video_editor","animator","marketing"],
+  },
+  {
+    id: "lawyer",
+    emoji: "⚖️",
+    name: "Lawyer / Advocate",
+    field: "Law & Justice",
+    color: "rgba(255,196,0,0.08)",
+    tagline: "Uphold justice, defend rights, and navigate the complex systems of law.",
+    keywords: ["lawyer","law","legal","advocate","llb","attorney","court","litigation","barrister","corporate law","criminal law","civil law","justice"],
+    confidence: 91,
+    trend: "🟢 Stable",
+    trendType: "amber",
+    reliabilityYears: 40,
+    demandScore: 88,
+    salaryPKR: { entry: "60K–1.2L/mo", mid: "2L–6L/mo", senior: "8L–30L+/mo" },
+    salaryBars: [18, 48, 82],
+    skills: ["Legal Research","Drafting","Litigation","Negotiation","Contract Law","Criminal Law","Corporate Law","Communication","Analysis","Ethics"],
+    roadmap: [
+      { title: "FSc / FA (Intermediate)", desc: "Any subject — Pre-Law, Humanities or Science both work", tag: "foundation" },
+      { title: "LLB Degree (3–5 Years)", desc: "Bachelor of Laws — Constitutional, Criminal, Civil, Corporate law", tag: "foundation" },
+      { title: "Bar Council Registration", desc: "Pass the bar exam and enroll with Pakistan Bar Council", tag: "core" },
+      { title: "Court Practice & Internship", desc: "Work under a senior advocate — learn litigation firsthand", tag: "core" },
+      { title: "LLM / Specialization", desc: "Corporate law, International law, Cyber law, Human rights", tag: "advanced" },
+      { title: "Build Reputation", desc: "Notable cases, publications, teaching, public speaking", tag: "portfolio" },
+    ],
+    scope: "Legal expertise is irreplaceable by AI — judgment, advocacy, and ethics require humans. Corporate lawyers in Pakistan earn extremely well. International law firms offer overseas opportunities. Cyber law is an explosive new sub-field.",
+    related: ["business_analyst","hrm","psychologist","policy_analyst"],
+  },
+  {
+    id: "business_analyst",
+    emoji: "📈",
+    name: "Business Analyst",
+    field: "Business",
+    color: "rgba(94,196,255,0.08)",
+    tagline: "Bridge the gap between business needs and technology solutions to drive organizational success.",
+    keywords: ["business","management","mba","bba","marketing","finance","business analyst","strategy","operations","consulting","entrepreneur","startup","economics"],
+    confidence: 89,
+    trend: "📈 Growing",
+    trendType: "blue",
+    reliabilityYears: 25,
+    demandScore: 87,
+    salaryPKR: { entry: "70K–1.2L/mo", mid: "1.8L–4L/mo", senior: "5L–12L+/mo" },
+    salaryBars: [20, 48, 78],
+    skills: ["Excel","SQL","Power BI","Tableau","Requirement Analysis","Agile","JIRA","Communication","Statistics","Business Process Modeling"],
+    roadmap: [
+      { title: "Business Fundamentals", desc: "Marketing, Finance, Accounting, Operations — BBA or equivalent", tag: "foundation" },
+      { title: "Data & Analytics Skills", desc: "Excel, SQL, Power BI — turn data into business decisions", tag: "foundation" },
+      { title: "Requirement Analysis", desc: "BRD, user stories, process mapping, stakeholder management", tag: "core" },
+      { title: "Project Management", desc: "Agile, Scrum, PMP — managing delivery and teams", tag: "core" },
+      { title: "MBA / Professional Certs", desc: "MBA, CBAP, PMP — elevate your strategic value", tag: "advanced" },
+      { title: "Industry Experience", desc: "Banking, Telecom, IT, FMCG — build cross-sector expertise", tag: "portfolio" },
+    ],
+    scope: "Business Analysts are essential in every large organization. They sit at the intersection of tech and business — one of the most versatile career paths. Pakistan's corporate sector and multinational presence creates strong demand.",
+    related: ["data_scientist","project_manager","marketing","finance"],
+  },
+  {
+    id: "teacher",
+    emoji: "📚",
+    name: "Teacher / Educator",
+    field: "Education",
+    color: "rgba(125,249,194,0.06)",
+    tagline: "Shape the minds of future generations and create lasting impact through knowledge.",
+    keywords: ["teacher","education","teaching","school","lecturer","professor","tutor","academy","curriculum","pedagogy","trainer","instructor"],
+    confidence: 90,
+    trend: "🟢 Evergreen",
+    trendType: "amber",
+    reliabilityYears: 45,
+    demandScore: 90,
+    salaryPKR: { entry: "50K–90K/mo", mid: "1L–2.5L/mo", senior: "2.5L–8L+/mo" },
+    salaryBars: [15, 38, 68],
+    skills: ["Subject Mastery","Pedagogy","Communication","Curriculum Design","Assessment","Technology Integration","Patience","Leadership","Research","Online Teaching"],
+    roadmap: [
+      { title: "Bachelor's in Subject (BS/BA)", desc: "Specialize in your passion — Science, Arts, Commerce, etc.", tag: "foundation" },
+      { title: "B.Ed or M.Ed", desc: "Bachelor/Master of Education — learn teaching methods", tag: "foundation" },
+      { title: "Practice Teaching", desc: "Student teaching practicum — real classroom experience", tag: "core" },
+      { title: "Digital Teaching Skills", desc: "Zoom, Google Classroom, YouTube — online teaching is booming", tag: "core" },
+      { title: "Master's / PhD", desc: "For university-level teaching and research positions", tag: "advanced" },
+      { title: "Start an Academy / YouTube", desc: "Many Pakistani teachers earn millions via online education", tag: "portfolio" },
+    ],
+    scope: "Pakistan has 60%+ youth population — teacher demand is enormous. Online education (YouTube, Udemy, own platforms) allows teachers to earn globally. A respected profession with job security and social impact.",
+    related: ["psychologist","hrm","researcher","policy_analyst"],
+  },
+  {
+    id: "ui_ux",
+    emoji: "✦",
+    name: "UI/UX Designer",
+    field: "Creative Tech",
+    color: "rgba(255,196,0,0.08)",
+    tagline: "Design digital experiences that are beautiful, intuitive, and human-centered.",
+    keywords: ["ui ux","user interface","user experience","ux","figma","product design","wireframe","prototype","interaction design","usability"],
+    confidence: 91,
+    trend: "🔥 High Growth",
+    trendType: "green",
+    reliabilityYears: 18,
+    demandScore: 90,
+    salaryPKR: { entry: "80K–1.5L/mo", mid: "2L–4L/mo", senior: "5L–10L+/mo" },
+    salaryBars: [24, 52, 80],
+    skills: ["Figma","Adobe XD","Sketch","Prototyping","User Research","Wireframing","Design Systems","HTML/CSS Basics","Accessibility","Usability Testing"],
+    roadmap: [
+      { title: "Design Fundamentals", desc: "Typography, color, layout, visual hierarchy", tag: "foundation" },
+      { title: "Figma Mastery", desc: "Components, auto-layout, prototyping, variants", tag: "foundation" },
+      { title: "UX Research Methods", desc: "User interviews, personas, journey maps, usability testing", tag: "core" },
+      { title: "Design Systems", desc: "Build consistent component libraries, style guides", tag: "core" },
+      { title: "Frontend Basics", desc: "HTML/CSS — collaborate better with developers", tag: "advanced" },
+      { title: "Case Studies Portfolio", desc: "3–5 end-to-end design case studies on Behance/Dribbble", tag: "portfolio" },
+    ],
+    scope: "Every app, website, and digital product needs a UX designer. The field is growing faster than design programs can produce graduates. Remote work globally is very common. Pakistan's tech startup ecosystem is creating strong local demand too.",
+    related: ["graphic_designer","software_engineer","ai_engineer","marketing"],
+  },
+  {
+    id: "pharmacist",
+    emoji: "💊",
+    name: "Pharmacist",
+    field: "Healthcare",
+    color: "rgba(255,107,107,0.07)",
+    tagline: "Ensure safe and effective use of medicines to protect and improve patient health.",
+    keywords: ["pharmacy","pharmacist","medicine","drugs","pharmaceutical","pharm d","dispensing","drug","compounding","clinical pharmacy"],
+    confidence: 92,
+    trend: "🟢 Stable & Secure",
+    trendType: "amber",
+    reliabilityYears: 35,
+    demandScore: 88,
+    salaryPKR: { entry: "70K–1.2L/mo", mid: "1.5L–3L/mo", senior: "4L–10L+/mo" },
+    salaryBars: [20, 45, 75],
+    skills: ["Pharmacology","Drug Interactions","Clinical Pharmacy","Pharmaceutical Chemistry","Patient Counseling","Dispensing","Research","Regulatory Affairs","Microbiology","Quality Control"],
+    roadmap: [
+      { title: "FSc Pre-Medical", desc: "Biology, Chemistry required — 80%+ for top universities", tag: "foundation" },
+      { title: "Pharm-D Degree (5 Years)", desc: "Doctor of Pharmacy — complete pharmaceutical sciences", tag: "foundation" },
+      { title: "Supervised Internship (1 Year)", desc: "Hospital pharmacy, community pharmacy, industrial rotation", tag: "core" },
+      { title: "Pharmacy Council Registration", desc: "Register with Pakistan Pharmacy Council — mandatory", tag: "core" },
+      { title: "Specialization / MSc / PhD", desc: "Clinical pharmacy, pharmaceutical research, regulatory", tag: "advanced" },
+      { title: "Industry / Research", desc: "Pharmaceutical companies, hospitals, academia, drug regulation", tag: "portfolio" },
+    ],
+    scope: "Pakistan's pharmaceutical sector is one of the largest in Asia. Multinational pharma companies pay very well. Abroad opportunities (UK, Canada, USA, Gulf) are strong for registered pharmacists.",
+    related: ["doctor","biomedical","nutritionist","researcher"],
+  },
+  {
+    id: "cloud_engineer",
+    emoji: "☁️",
+    name: "Cloud Engineer",
+    field: "Technology",
+    color: "rgba(94,196,255,0.08)",
+    tagline: "Build and manage the scalable cloud infrastructure that powers modern digital services.",
+    keywords: ["cloud","aws","azure","google cloud","gcp","devops","infrastructure","kubernetes","docker","terraform","cloud computing","serverless"],
+    confidence: 94,
+    trend: "🔥 Critical Growth",
+    trendType: "green",
+    reliabilityYears: 20,
+    demandScore: 94,
+    salaryPKR: { entry: "1.2L–2L/mo", mid: "3L–6L/mo", senior: "7L–15L+/mo" },
+    salaryBars: [30, 65, 90],
+    skills: ["AWS","Azure","GCP","Kubernetes","Docker","Terraform","CI/CD","Linux","Python","Networking"],
+    roadmap: [
+      { title: "Linux & Networking", desc: "Linux commands, TCP/IP, DNS, subnetting — the foundation", tag: "foundation" },
+      { title: "Cloud Provider Basics", desc: "AWS / Azure / GCP — EC2, S3, IAM, VPC fundamentals", tag: "foundation" },
+      { title: "Containerization", desc: "Docker, Kubernetes — deploy and orchestrate applications", tag: "core" },
+      { title: "Infrastructure as Code", desc: "Terraform, Ansible, CloudFormation — automate infrastructure", tag: "core" },
+      { title: "Cloud Certifications", desc: "AWS Solutions Architect, Azure AZ-900/AZ-104, GCP ACE", tag: "advanced" },
+      { title: "CI/CD & DevSecOps", desc: "GitHub Actions, Jenkins, security in cloud pipelines", tag: "portfolio" },
+    ],
+    scope: "Cloud spending globally exceeds $600 billion annually. Every organization is migrating to cloud. AWS, Azure, GCP certified professionals are among the highest paid in global tech. Remote work is the norm.",
+    related: ["software_engineer","cybersecurity","ai_engineer","data_scientist"],
+  },
+  {
+    id: "architect",
+    emoji: "🏗️",
+    name: "Architect",
+    field: "Engineering & Design",
+    color: "rgba(255,196,0,0.07)",
+    tagline: "Design buildings and spaces that are functional, beautiful, and sustainable.",
+    keywords: ["architect","architecture","building","construction","civil","structural","autocad","revit","urban planning","interior design","3d modeling"],
+    confidence: 87,
+    trend: "🟢 Stable",
+    trendType: "amber",
+    reliabilityYears: 35,
+    demandScore: 82,
+    salaryPKR: { entry: "70K–1.2L/mo", mid: "1.5L–4L/mo", senior: "5L–15L+/mo" },
+    salaryBars: [20, 45, 76],
+    skills: ["AutoCAD","Revit","SketchUp","3ds Max","Structural Analysis","Urban Planning","Building Codes","Project Management","Sustainability","Presentation"],
+    roadmap: [
+      { title: "B.Arch Degree (5 Years)", desc: "Bachelor of Architecture — design, engineering, history", tag: "foundation" },
+      { title: "Software Tools Mastery", desc: "AutoCAD, Revit, SketchUp, Rhino, 3ds Max", tag: "foundation" },
+      { title: "Internship & Practical", desc: "Work under a registered architect — mandatory for licensure", tag: "core" },
+      { title: "PEC / Council Registration", desc: "Pakistan Engineering Council registration for practice", tag: "core" },
+      { title: "Specialization", desc: "Interior design, urban planning, sustainable architecture, BIM", tag: "advanced" },
+      { title: "Own Practice / Portfolio", desc: "Build award-winning project portfolio, start your firm", tag: "portfolio" },
+    ],
+    scope: "Pakistan's construction sector is booming with CPEC, housing schemes, and commercial development. Architects are needed for both government projects and private sector. Middle East has huge demand for Pakistani architects.",
+    related: ["civil_engineer","interior_designer","urban_planner","project_manager"],
+  },
+  {
+    id: "psychologist",
+    emoji: "🧠",
+    name: "Psychologist",
+    field: "Healthcare & Social",
+    color: "rgba(125,249,194,0.07)",
+    tagline: "Understand the human mind and help people achieve mental wellness and personal growth.",
+    keywords: ["psychology","psychologist","mental health","counseling","therapy","behavior","cognitive","clinical psychology","counselor","psychiatry"],
+    confidence: 86,
+    trend: "📈 Rising Fast",
+    trendType: "blue",
+    reliabilityYears: 35,
+    demandScore: 84,
+    salaryPKR: { entry: "60K–1L/mo", mid: "1.5L–3L/mo", senior: "4L–10L+/mo" },
+    salaryBars: [18, 42, 72],
+    skills: ["Clinical Assessment","CBT","Counseling Techniques","Research Methods","SPSS","Psychometrics","Ethics","Communication","Diagnosis","Crisis Intervention"],
+    roadmap: [
+      { title: "BS Psychology (4 Years)", desc: "Foundation in cognitive, social, biological psychology", tag: "foundation" },
+      { title: "Research & Statistics", desc: "SPSS, research methods, thesis — critical for practice", tag: "foundation" },
+      { title: "MS Clinical Psychology (2 Years)", desc: "Clinical assessment, psychopathology, therapeutic techniques", tag: "core" },
+      { title: "Supervised Internship", desc: "Hospital, NGO, school — 500+ hours clinical practice", tag: "core" },
+      { title: "Licensing & Certification", desc: "Pakistan Psychological Association membership", tag: "advanced" },
+      { title: "Private Practice / Research", desc: "Open a clinic, work with corporations, publish research", tag: "portfolio" },
+    ],
+    scope: "Mental health awareness is surging in Pakistan. Corporate wellness programs, schools, and hospitals are creating growing demand. Online therapy platforms are creating new opportunities. Abroad — UK, Canada, Australia — strong demand with excellent salaries.",
+    related: ["doctor","teacher","social_worker","researcher"],
+  },
+  {
+    id: "civil_engineer",
+    emoji: "🏛️",
+    name: "Civil Engineer",
+    field: "Engineering",
+    color: "rgba(255,107,107,0.07)",
+    tagline: "Design and build the infrastructure that keeps civilization running.",
+    keywords: ["civil engineering","civil","structural","infrastructure","construction","road","bridge","dam","highway","geotechnical","survey","transportation"],
+    confidence: 89,
+    trend: "🟢 Steady Demand",
+    trendType: "amber",
+    reliabilityYears: 40,
+    demandScore: 88,
+    salaryPKR: { entry: "80K–1.4L/mo", mid: "2L–4L/mo", senior: "5L–15L+/mo" },
+    salaryBars: [22, 50, 80],
+    skills: ["AutoCAD","ETABS","SAP2000","Primavera","Structural Analysis","Soil Mechanics","Project Management","Surveying","Cost Estimation","BIM"],
+    roadmap: [
+      { title: "BE Civil Engineering (4 Years)", desc: "Structural, geotechnical, transportation, hydraulics", tag: "foundation" },
+      { title: "Software Tools", desc: "AutoCAD, ETABS, SAP2000, Primavera, Revit", tag: "foundation" },
+      { title: "PEC Registration", desc: "Pakistan Engineering Council — mandatory for practice", tag: "core" },
+      { title: "Site & Field Experience", desc: "Construction sites, government projects, consulting firms", tag: "core" },
+      { title: "MS / Specialization", desc: "Structural, Geotechnical, Transportation, Environmental", tag: "advanced" },
+      { title: "Consulting / Own Firm", desc: "Establish a consulting practice or join major contractors", tag: "portfolio" },
+    ],
+    scope: "CPEC and Pakistan's massive infrastructure deficit mean civil engineers are consistently in demand. Middle East, especially UAE and Saudi Arabia, have enormous demand. Government sector jobs provide stability.",
+    related: ["architect","project_manager","urban_planner","environmental_engineer"],
+  },
+  {
+    id: "digital_marketing",
+    emoji: "📣",
+    name: "Digital Marketer",
+    field: "Marketing & Media",
+    color: "rgba(94,196,255,0.07)",
+    tagline: "Grow brands and businesses through data-driven online marketing strategies.",
+    keywords: ["digital marketing","marketing","seo","social media","content","google ads","facebook ads","email marketing","influencer","brand","ecommerce","growth hacking","ppc","seo"],
+    confidence: 87,
+    trend: "📈 Fast Growing",
+    trendType: "blue",
+    reliabilityYears: 15,
+    demandScore: 86,
+    salaryPKR: { entry: "60K–1.2L/mo", mid: "1.5L–3.5L/mo", senior: "4L–10L+/mo" },
+    salaryBars: [18, 44, 74],
+    skills: ["SEO","Google Ads","Meta Ads","Content Marketing","Email Marketing","Analytics","Copywriting","Social Media Strategy","Canva","HubSpot"],
+    roadmap: [
+      { title: "Marketing Fundamentals", desc: "Consumer behavior, brand strategy, 4Ps of marketing", tag: "foundation" },
+      { title: "SEO & Content Marketing", desc: "Keyword research, on-page SEO, blog writing, backlinks", tag: "foundation" },
+      { title: "Paid Advertising", desc: "Google Ads, Meta Ads, YouTube Ads — PPC campaigns", tag: "core" },
+      { title: "Analytics & Data", desc: "Google Analytics, Meta Insights, conversion tracking", tag: "core" },
+      { title: "Email & Automation", desc: "Mailchimp, HubSpot, customer journey automation", tag: "advanced" },
+      { title: "Client Portfolio & Agency", desc: "Run campaigns for clients, start a digital marketing agency", tag: "portfolio" },
+    ],
+    scope: "Pakistan's e-commerce and startup boom is creating massive demand for digital marketers. Freelancing in USD via Upwork/Fiverr is very accessible. Almost every business needs online marketing — the market is enormous.",
+    related: ["graphic_designer","ui_ux","business_analyst","content_creator"],
+  },
+  {
+    id: "electrical_engineer",
+    emoji: "⚡",
+    name: "Electrical Engineer",
+    field: "Engineering",
+    color: "rgba(255,196,0,0.07)",
+    tagline: "Power the world through the design of electrical systems and innovative electronics.",
+    keywords: ["electrical engineering","electrical","electronics","power systems","circuit","embedded systems","matlab","plc","iot","renewable energy","solar","control systems"],
+    confidence: 88,
+    trend: "🟢 Steady",
+    trendType: "amber",
+    reliabilityYears: 35,
+    demandScore: 87,
+    salaryPKR: { entry: "80K–1.4L/mo", mid: "2L–4L/mo", senior: "5L–12L+/mo" },
+    salaryBars: [22, 50, 80],
+    skills: ["MATLAB","Circuit Design","PLC","SCADA","Embedded Systems","Arduino","Power Systems","AutoCAD Electrical","IoT","Control Systems"],
+    roadmap: [
+      { title: "BE Electrical Engineering (4 Years)", desc: "Circuits, power systems, electronics, control systems", tag: "foundation" },
+      { title: "Software & Simulation", desc: "MATLAB, Simulink, Proteus, AutoCAD Electrical", tag: "foundation" },
+      { title: "PEC Registration", desc: "Pakistan Engineering Council — mandatory for professional practice", tag: "core" },
+      { title: "Specialization Track", desc: "Power, Telecom, Electronics, Embedded, Renewable Energy, IoT", tag: "core" },
+      { title: "MS / Research", desc: "Advanced research in power electronics, AI for energy, renewables", tag: "advanced" },
+      { title: "Industry Projects", desc: "NEPRA, WAPDA, telecom firms, manufacturing sector", tag: "portfolio" },
+    ],
+    scope: "Pakistan's energy crisis makes electrical engineers critically important. Solar/renewable energy is booming. Telecom sector, manufacturing, and automation all need electrical engineers. Gulf countries offer premium salaries.",
+    related: ["civil_engineer","ai_engineer","cloud_engineer","biomedical"],
+  },
+  {
+    id: "content_creator",
+    emoji: "🎬",
+    name: "Content Creator / YouTuber",
+    field: "Media & Entertainment",
+    color: "rgba(255,107,107,0.08)",
+    tagline: "Build an audience, share your passion, and monetize your creativity at scale.",
+    keywords: ["youtube","content creator","youtuber","vlog","podcast","streaming","tiktok","social media influencer","video editing","content","creator","blogging"],
+    confidence: 78,
+    trend: "🔥 Booming",
+    trendType: "green",
+    reliabilityYears: 10,
+    demandScore: 82,
+    salaryPKR: { entry: "20K–1L/mo", mid: "1L–5L/mo", senior: "10L–100L+/mo" },
+    salaryBars: [12, 45, 95],
+    skills: ["Video Editing","Scriptwriting","SEO","Thumbnail Design","Analytics","Public Speaking","Storytelling","Adobe Premiere","DaVinci Resolve","Social Strategy"],
+    roadmap: [
+      { title: "Choose Your Niche", desc: "Education, tech, vlog, cooking, finance, gaming, comedy", tag: "foundation" },
+      { title: "Content Production Skills", desc: "Video editing (DaVinci Resolve / Premiere), audio, lighting", tag: "foundation" },
+      { title: "YouTube SEO & Strategy", desc: "Thumbnails, titles, descriptions, analytics, posting schedule", tag: "core" },
+      { title: "Audience Growth", desc: "Shorts, collaborations, community posts, social media cross-posting", tag: "core" },
+      { title: "Monetization", desc: "AdSense, sponsorships, merchandise, courses, memberships", tag: "advanced" },
+      { title: "Brand Deals & Scale", desc: "Corporate sponsorships, hired team, own brand products", tag: "portfolio" },
+    ],
+    scope: "Pakistan is one of the fastest growing YouTube markets globally. Pakistani content creators like Irfan Junejo and Ducky Bhai have built massive empires. Ad revenue + sponsorships can easily exceed traditional salaries once established.",
+    related: ["graphic_designer","digital_marketing","ui_ux","psychologist"],
+  },
+  {
+    id: "game_developer",
+    emoji: "🎮",
+    name: "Game Developer",
+    field: "Technology & Creative",
+    color: "rgba(125,249,194,0.07)",
+    tagline: "Create interactive worlds and unforgettable gaming experiences for millions.",
+    keywords: ["game development","game developer","unity","unreal engine","gaming","game design","3d modeling","blender","c#","game programming","indie game"],
+    confidence: 83,
+    trend: "📈 Growing",
+    trendType: "blue",
+    reliabilityYears: 15,
+    demandScore: 80,
+    salaryPKR: { entry: "80K–1.4L/mo", mid: "2L–4L/mo", senior: "5L–12L+/mo" },
+    salaryBars: [22, 48, 80],
+    skills: ["Unity","Unreal Engine","C#","C++","Blender","3D Modeling","Physics","Shader Programming","Game Design","Monetization"],
+    roadmap: [
+      { title: "Programming Basics", desc: "C# for Unity or C++ for Unreal — object-oriented programming", tag: "foundation" },
+      { title: "Unity / Unreal Engine", desc: "Master one engine — scenes, physics, animation, UI", tag: "foundation" },
+      { title: "3D Modeling & Art", desc: "Blender basics — understanding game assets", tag: "core" },
+      { title: "Game Design Principles", desc: "Mechanics, level design, player psychology, monetization", tag: "core" },
+      { title: "Advanced Graphics", desc: "Shaders, VFX, lighting, performance optimization", tag: "advanced" },
+      { title: "Publish Your Games", desc: "Release on Steam, Google Play, App Store — build a game portfolio", tag: "portfolio" },
+    ],
+    scope: "Gaming is a $200+ billion global industry — bigger than movies and music combined. Pakistan's indie game scene is emerging. International remote jobs are very accessible. Mobile gaming is the fastest growing segment.",
+    related: ["software_engineer","graphic_designer","ai_engineer","ui_ux"],
+  },
+  {
+    id: "accountant",
+    emoji: "🧾",
+    name: "Accountant / Finance Professional",
+    field: "Finance",
+    color: "rgba(94,196,255,0.07)",
+    tagline: "Manage financial records, ensure compliance, and guide strategic financial decisions.",
+    keywords: ["accounting","accountant","finance","ca","acca","cpa","audit","tax","bookkeeping","financial reporting","cfa","chartered accountant","cma"],
+    confidence: 91,
+    trend: "🟢 Rock Solid",
+    trendType: "amber",
+    reliabilityYears: 40,
+    demandScore: 89,
+    salaryPKR: { entry: "70K–1.3L/mo", mid: "2L–5L/mo", senior: "6L–20L+/mo" },
+    salaryBars: [20, 50, 80],
+    skills: ["Financial Reporting","IFRS","Tax Law","QuickBooks","SAP","Excel","Auditing","Cost Accounting","Budgeting","Risk Management"],
+    roadmap: [
+      { title: "B.Com / BBA Finance", desc: "Accounting, economics, business law fundamentals", tag: "foundation" },
+      { title: "Professional Qualification", desc: "ACCA, CA, CPA, CIMA — choose your path and start early", tag: "foundation" },
+      { title: "Accounting Software", desc: "QuickBooks, SAP, Oracle — essential for modern practice", tag: "core" },
+      { title: "Tax & Regulatory Compliance", desc: "FBR tax law, corporate compliance, SECP regulations", tag: "core" },
+      { title: "Specialization", desc: "Audit, Forensic Accounting, Financial Modeling, CFA", tag: "advanced" },
+      { title: "Big 4 / CFO Track", desc: "Deloitte, KPMG, EY, PWC or corporate finance leadership", tag: "portfolio" },
+    ],
+    scope: "Every company in every sector needs accountants. The ACCA and CA qualifications open global doors — UK, UAE, Canada, Australia. Pakistan's Big 4 firms offer excellent career trajectories. Finance leadership roles (CFO) are extremely well-compensated.",
+    related: ["business_analyst","lawyer","data_scientist","hrm"],
+  },
+  {
+    id: "biomedical",
+    emoji: "🔬",
+    name: "Biomedical Engineer",
+    field: "Healthcare & Engineering",
+    color: "rgba(125,249,194,0.07)",
+    tagline: "Apply engineering principles to solve medical problems and create life-saving technologies.",
+    keywords: ["biomedical","biomedical engineering","medical devices","bioinformatics","biomechanics","medical imaging","prosthetics","health technology","bme"],
+    confidence: 86,
+    trend: "📈 High Growth",
+    trendType: "blue",
+    reliabilityYears: 25,
+    demandScore: 84,
+    salaryPKR: { entry: "80K–1.4L/mo", mid: "2L–4L/mo", senior: "5L–12L+/mo" },
+    salaryBars: [22, 50, 80],
+    skills: ["Medical Device Design","MATLAB","Signal Processing","CAD","Biomechanics","Clinical Trials","Regulatory Affairs","Python","Bioinformatics","Healthcare Standards"],
+    roadmap: [
+      { title: "BE Biomedical Engineering (4 Years)", desc: "Engineering + biology + medical sciences foundation", tag: "foundation" },
+      { title: "Technical Skills", desc: "MATLAB, Python, medical imaging, signal processing", tag: "foundation" },
+      { title: "Medical Device Industry", desc: "Regulatory affairs, FDA/CE marking, clinical trials", tag: "core" },
+      { title: "Research Projects", desc: "Prosthetics, diagnostic tools, hospital equipment", tag: "core" },
+      { title: "MS / PhD Research", desc: "AI in healthcare, regenerative medicine, bioinformatics", tag: "advanced" },
+      { title: "Industry / Startups", desc: "MedTech companies, hospital biomedical departments, health startups", tag: "portfolio" },
+    ],
+    scope: "MedTech is one of the fastest growing global industries. AI + healthcare = enormous opportunity. Pakistan's hospital sector needs trained biomedical engineers. Internationally, salaries are among the highest in engineering.",
+    related: ["doctor","ai_engineer","electrical_engineer","data_scientist"],
+  },
+  {
+    id: "nutritionist",
+    emoji: "🥗",
+    name: "Nutritionist / Dietitian",
+    field: "Healthcare & Wellness",
+    color: "rgba(125,249,194,0.06)",
+    tagline: "Promote health and prevent disease through evidence-based nutritional guidance.",
+    keywords: ["nutrition","nutritionist","dietitian","diet","food science","sports nutrition","clinical nutrition","weight loss","wellness","health coach"],
+    confidence: 82,
+    trend: "📈 Growing",
+    trendType: "blue",
+    reliabilityYears: 25,
+    demandScore: 78,
+    salaryPKR: { entry: "50K–90K/mo", mid: "1L–2.5L/mo", senior: "3L–8L+/mo" },
+    salaryBars: [14, 35, 65],
+    skills: ["Clinical Nutrition","Dietary Assessment","Meal Planning","Food Science","Biochemistry","Patient Counseling","Sports Nutrition","Research","Public Health","Social Media"],
+    roadmap: [
+      { title: "BS Human Nutrition (4 Years)", desc: "Biochemistry, food science, clinical nutrition, dietetics", tag: "foundation" },
+      { title: "Clinical Training", desc: "Hospital rotations — renal, diabetes, oncology diets", tag: "core" },
+      { title: "Certification & Registration", desc: "Pakistan Dietetic Association membership, RD credential", tag: "core" },
+      { title: "Specialization", desc: "Sports nutrition, pediatric, clinical, public health, eating disorders", tag: "advanced" },
+      { title: "MS / Research", desc: "Advanced research in food science, public health nutrition", tag: "advanced" },
+      { title: "Online Practice", desc: "Instagram, YouTube, online consultations — huge audience in Pakistan", tag: "portfolio" },
+    ],
+    scope: "Pakistan has an obesity and malnutrition dual burden — creating strong nutritionist demand. Corporate wellness, sports teams, and online consulting are booming. Social media has allowed nutritionists to build large practices from home.",
+    related: ["doctor","pharmacist","psychologist","teacher"],
+  },
+  {
+    id: "hrm",
+    emoji: "👥",
+    name: "HR Professional",
+    field: "Business & Management",
+    color: "rgba(94,196,255,0.07)",
+    tagline: "Build high-performing organizations by attracting, developing, and retaining top talent.",
+    keywords: ["human resources","hr","hrm","recruitment","talent acquisition","payroll","organizational behavior","training","development","people management","compensation","labor law"],
+    confidence: 85,
+    trend: "🟢 Stable",
+    trendType: "amber",
+    reliabilityYears: 30,
+    demandScore: 82,
+    salaryPKR: { entry: "60K–1.1L/mo", mid: "1.5L–3L/mo", senior: "4L–10L+/mo" },
+    salaryBars: [18, 42, 72],
+    skills: ["Recruitment","HRIS Systems","Labor Law","Performance Management","Payroll","Training & Development","OD","Communication","Analytics","Change Management"],
+    roadmap: [
+      { title: "BBA / MBA HR", desc: "Organizational behavior, HR management, labor law", tag: "foundation" },
+      { title: "HR Software", desc: "SAP HCM, Oracle HCM, BambooHR, ATS systems", tag: "foundation" },
+      { title: "Recruitment Mastery", desc: "Talent acquisition, interviewing, employer branding", tag: "core" },
+      { title: "HR Analytics", desc: "Data-driven HR decisions, workforce planning, dashboards", tag: "core" },
+      { title: "SHRM / CIPD Certification", desc: "Global certifications that significantly elevate value", tag: "advanced" },
+      { title: "CHRO Track", desc: "HR Director → Chief Human Resources Officer — C-suite path", tag: "portfolio" },
+    ],
+    scope: "As organizations grow more complex, the HR function becomes more strategic. Tech companies, multinationals, and NGOs in Pakistan all need strong HR leaders. HR Analytics is an exciting new specialization combining HR with data science.",
+    related: ["business_analyst","lawyer","psychologist","teacher"],
+  },
+  {
+    id: "environmental_engineer",
+    emoji: "🌱",
+    name: "Environmental Engineer",
+    field: "Engineering & Sustainability",
+    color: "rgba(125,249,194,0.07)",
+    tagline: "Solve environmental challenges and build a sustainable future for the planet.",
+    keywords: ["environmental","environment","sustainability","green","climate","ecology","environmental engineering","waste management","water treatment","pollution","renewable"],
+    confidence: 83,
+    trend: "📈 Future Critical",
+    trendType: "blue",
+    reliabilityYears: 30,
+    demandScore: 80,
+    salaryPKR: { entry: "70K–1.2L/mo", mid: "1.8L–3.5L/mo", senior: "4L–10L+/mo" },
+    salaryBars: [20, 44, 72],
+    skills: ["Environmental Impact Assessment","Water Treatment","Waste Management","GIS","AutoCAD","MATLAB","Environmental Law","Renewable Energy","Climate Modeling","Sustainability Reporting"],
+    roadmap: [
+      { title: "BE Environmental Engineering", desc: "Chemistry, biology, engineering principles for environment", tag: "foundation" },
+      { title: "Technical Tools", desc: "GIS, AutoCAD, MATLAB, environmental modeling software", tag: "foundation" },
+      { title: "EIA & Regulatory", desc: "Environmental impact assessment, EPA Pakistan regulations", tag: "core" },
+      { title: "Project Experience", desc: "Water treatment, waste management, industrial pollution control", tag: "core" },
+      { title: "MS / Research", desc: "Climate change, renewable energy systems, sustainability", tag: "advanced" },
+      { title: "International Organizations", desc: "UNDP, World Bank, ADB, IUCN — global conservation work", tag: "portfolio" },
+    ],
+    scope: "Climate change is the defining crisis of our era. Pakistan is highly vulnerable — environmental engineers are urgently needed. International NGOs and development banks hire Pakistani professionals. UN and World Bank projects offer excellent exposure.",
+    related: ["civil_engineer","electrical_engineer","biomedical","researcher"],
+  },
+  {
+    id: "researcher",
+    emoji: "🔭",
+    name: "Research Scientist / Academic",
+    field: "Academia & Research",
+    color: "rgba(255,196,0,0.07)",
+    tagline: "Push the boundaries of human knowledge through rigorous scientific inquiry.",
+    keywords: ["research","researcher","phd","academic","scientist","laboratory","publication","thesis","professor","scholar","fellowship","grant"],
+    confidence: 84,
+    trend: "🟢 Stable & Respected",
+    trendType: "amber",
+    reliabilityYears: 40,
+    demandScore: 78,
+    salaryPKR: { entry: "80K–1.5L/mo", mid: "2L–4L/mo", senior: "4L–12L+/mo" },
+    salaryBars: [22, 48, 72],
+    skills: ["Research Methods","SPSS","R","Python","Academic Writing","Grant Writing","Literature Review","Lab Skills","Peer Review","Statistics"],
+    roadmap: [
+      { title: "BS in Your Field (4 Years)", desc: "Strong foundation in your chosen discipline", tag: "foundation" },
+      { title: "MS / M.Phil (2 Years)", desc: "Thesis-based research — your first original contribution", tag: "foundation" },
+      { title: "PhD (3–5 Years)", desc: "Doctoral research — publish 3+ papers in international journals", tag: "core" },
+      { title: "Postdoctoral Research", desc: "International lab experience — USA, UK, Europe, China", tag: "core" },
+      { title: "Grant Writing & Funding", desc: "Apply for HEC, USAID, Fulbright, Newton fund research grants", tag: "advanced" },
+      { title: "Faculty / Research Lead", desc: "University professor, research center director, industry R&D", tag: "portfolio" },
+    ],
+    scope: "HEC Pakistan is massively expanding higher education funding. International scholarships (Fulbright, Commonwealth, DAAD) are highly accessible for Pakistani researchers. R&D roles in tech, pharma, and government are growing significantly.",
+    related: ["teacher","psychologist","biomedical","data_scientist"],
+  }
+];
+
+// Related career lookup
+const CAREER_MAP = {};
+CAREERS.forEach(c => CAREER_MAP[c.id] = c);
+
+// ============================================================
+// AI MATCHING ENGINE — Fuzzy + Weighted Scoring
+// ============================================================
+function tokenize(text) {
+  return text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+}
+
+function similarity(a, b) {
+  if (a === b) return 1;
+  if (a.includes(b) || b.includes(a)) return 0.85;
+  // Levenshtein distance for typo tolerance
+  const la = a.length, lb = b.length;
+  if (Math.abs(la - lb) > 4) return 0;
+  const dp = Array.from({length: la+1}, (_, i) => Array.from({length: lb+1}, (_, j) => i===0?j:j===0?i:0));
+  for (let i=1;i<=la;i++) for(let j=1;j<=lb;j++)
+    dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  const dist = dp[la][lb];
+  const maxLen = Math.max(la, lb);
+  return dist <= 2 ? Math.max(0, 1 - dist/maxLen) : 0;
+}
+
+function detectCareer(query) {
+  const tokens = tokenize(query);
+  if (!tokens.length) return { match: null, score: 0, suggestion: null };
+
+  let best = null, bestScore = 0, second = null, secondScore = 0;
+
+  for (const career of CAREERS) {
+    let score = 0;
+    for (const token of tokens) {
+      for (const kw of career.keywords) {
+        const kwTokens = tokenize(kw);
+        for (const kwT of kwTokens) {
+          const sim = similarity(token, kwT);
+          score += sim * (kw.includes(' ') ? 1.5 : 1); // multi-word keyword bonus
+        }
+      }
+    }
+    score = score / tokens.length; // normalize
+    if (score > bestScore) { second = best; secondScore = bestScore; best = career; bestScore = score; }
+    else if (score > secondScore) { second = career; secondScore = score; }
+  }
+
+  return { match: bestScore > 0.12 ? best : null, score: bestScore, suggestion: (bestScore < 0.35 && secondScore > 0.1) ? second : null };
+}
+
+// ============================================================
+// HISTORY
+// ============================================================
+let history = [];
+
+function addToHistory(career) {
+  history = [career, ...history.filter(h => h.id !== career.id)].slice(0, 6);
+  renderHistory();
+}
+
+function renderHistory() {
+  const sec = document.getElementById('history-section');
+  const chips = document.getElementById('history-chips');
+  if (!history.length) { sec.style.display='none'; return; }
+  sec.style.display = 'block';
+  chips.innerHTML = history.map(c =>
+    `<div class="history-chip" onclick="quickSearch('${c.name}')">
+      <span class="h-emoji">${c.emoji}</span> ${c.name}
+    </div>`
+  ).join('');
+}
+
+// ============================================================
+// RENDER RESULT
+// ============================================================
+function renderCareer(career) {
+  const trendBadgeClass = career.trendType === 'green' ? 'badge-green' : career.trendType === 'blue' ? 'badge-blue' : 'badge-amber';
+
+  const roadmapHTML = career.roadmap.map((step, i) => {
+    const tagClass = step.tag === 'foundation' ? 'tag-foundation' : step.tag === 'core' ? 'tag-core' : step.tag === 'advanced' ? 'tag-advanced' : 'tag-portfolio';
+    const tagLabel = step.tag.charAt(0).toUpperCase() + step.tag.slice(1);
+    return `<div class="roadmap-step">
+      <div class="step-num">${i+1}</div>
+      <div class="step-body">
+        <div class="step-title">${step.title}</div>
+        <div class="step-desc">${step.desc}</div>
+      </div>
+      <span class="step-tag ${tagClass}">${tagLabel}</span>
+    </div>`;
+  }).join('');
+
+  const relatedHTML = career.related
+    .map(id => CAREER_MAP[id])
+    .filter(Boolean)
+    .map(c => `<div class="related-card" onclick="quickSearch('${c.name}')">
+      <div class="related-emoji">${c.emoji}</div>
+      <div class="related-name">${c.name}</div>
+      <div class="related-field">${c.field}</div>
+    </div>`).join('');
+
+  const salaryKeys = Object.keys(career.salaryPKR);
+  const salaryBarsHTML = salaryKeys.map((key, i) => {
+    const label = key === 'entry' ? 'Entry Level' : key === 'mid' ? 'Mid Level' : 'Senior Level';
+    return `<div class="salary-row">
+      <div class="salary-row-label"><span>${label}</span><strong>${career.salaryPKR[key]}</strong></div>
+      <div class="salary-bar-bg"><div class="salary-bar-fill" data-width="${career.salaryBars[i]}" style="width:0%"></div></div>
+    </div>`;
+  }).join('');
+
+  const html = `
+  <div class="stagger">
+    <div class="career-hero" style="--hero-color: ${career.color}">
+      <div>
+        <div class="hero-emoji">${career.emoji}</div>
+        <div class="hero-career-name">${career.name}</div>
+        <div class="hero-tagline">${career.tagline}</div>
+        <div class="hero-badges">
+          <span class="badge ${trendBadgeClass}">⚡ ${career.trend}</span>
+          <span class="badge badge-blue">🌐 ${career.field}</span>
+          <span class="badge badge-amber">⏳ ${career.reliabilityYears} yr outlook</span>
+        </div>
+      </div>
+      <div class="confidence-ring-wrap">
+        <div class="ring-label">Confidence</div>
+        <svg width="80" height="80" class="ring" aria-label="Confidence ${career.confidence}%">
+          <circle cx="40" cy="40" r="30" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6"/>
+          <circle id="ring-fill" cx="40" cy="40" r="30" fill="none" stroke="#7DF9C2" stroke-width="6"
+            stroke-linecap="round"
+            stroke-dasharray="${2*Math.PI*30}"
+            stroke-dashoffset="${2*Math.PI*30}"
+            transform="rotate(-90 40 40)"/>
+        </svg>
+        <div class="ring-value">${career.confidence}%</div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Market Demand</div>
+        <div class="stat-value">${career.demandScore}<span style="font-size:16px;color:var(--muted)">/100</span></div>
+        <div class="stat-sub">Based on job listings & growth</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Career Longevity</div>
+        <div class="stat-value">${career.reliabilityYears}<span style="font-size:16px;color:var(--muted)"> yrs</span></div>
+        <div class="stat-sub">Estimated relevance outlook</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">AI Automation Risk</div>
+        <div class="stat-value" style="color:${career.demandScore>88?'var(--accent)':career.demandScore>75?'#ffc400':'var(--accent3)'}">
+          ${career.demandScore > 88 ? 'Low' : career.demandScore > 75 ? 'Medium' : 'High'}
+        </div>
+        <div class="stat-sub">Risk of job automation by AI</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Entry Level (PKR)</div>
+        <div class="stat-value" style="font-size:20px">${career.salaryPKR.entry}</div>
+        <div class="stat-sub">Monthly salary estimate</div>
+      </div>
+    </div>
+
+    <div class="section-heading">Step-by-Step Roadmap</div>
+    <div class="roadmap">${roadmapHTML}</div>
+
+    <div class="two-col" style="margin-top:16px;">
+      <div class="info-card">
+        <h3>Key Skills to Learn</h3>
+        <div class="skill-list">${career.skills.map(s=>`<span class="skill-chip">${s}</span>`).join('')}</div>
+      </div>
+      <div class="info-card">
+        <h3>Salary Range (Pakistan)</h3>
+        <div class="salary-bar-wrap">${salaryBarsHTML}</div>
+      </div>
+    </div>
+
+    <div class="scope-card" style="margin-top:16px;">
+      <h3>📈 Future Scope & Opportunities</h3>
+      <p class="scope-text">${career.scope}</p>
+    </div>
+
+    ${relatedHTML ? `
+    <div class="section-heading" style="margin-top:32px;">Related Careers You Might Like</div>
+    <div class="related-grid">${relatedHTML}</div>
+    ` : ''}
+  </div>`;
+
+  const section = document.getElementById('result-section');
+  section.style.display = 'block';
+  section.innerHTML = html;
+
+  // Animate ring
+  setTimeout(() => {
+    const ring = document.getElementById('ring-fill');
+    if (ring) {
+      const circ = 2 * Math.PI * 30;
+      ring.style.strokeDashoffset = circ * (1 - career.confidence / 100);
+    }
+    // Animate salary bars
+    document.querySelectorAll('.salary-bar-fill').forEach(bar => {
+      setTimeout(() => { bar.style.width = bar.dataset.width + '%'; }, 100);
+    });
+  }, 100);
+
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  addToHistory(career);
+}
+
+// ============================================================
+// SEARCH LOGIC
+// ============================================================
+function doSearch() {
+  const query = document.getElementById('search-input').value.trim();
+  if (!query) return;
+
+  const alertEl = document.getElementById('match-alert');
+  alertEl.style.display = 'none';
+
+  // Show loading
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('result-section').style.display = 'none';
+
+  setTimeout(() => {
+    document.getElementById('loading').style.display = 'none';
+    const { match, suggestion } = detectCareer(query);
+
+    if (match) {
+      renderCareer(match);
+    } else if (suggestion) {
+      alertEl.innerHTML = `No exact match for "<strong>${query}</strong>". Did you mean: <span onclick="quickSearch('${suggestion.name}')">${suggestion.emoji} ${suggestion.name}</span>?`;
+      alertEl.style.display = 'block';
+    } else {
+      alertEl.innerHTML = `No match found for "<strong>${query}</strong>". Try: AI, doctor, coding, law, design, business, finance...`;
+      alertEl.style.display = 'block';
+    }
+  }, 600);
+}
+
+function quickSearch(name) {
+  document.getElementById('search-input').value = name;
+  doSearch();
+}
+
+// Enter key support
+document.getElementById('search-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doSearch();
+});
+</script>
+</body>
+</html>
